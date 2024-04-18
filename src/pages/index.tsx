@@ -1,4 +1,5 @@
 import { useRouter } from "next/router";
+import { Button, Grid } from "@mui/material";
 
 const Home = () => {
   const screenList: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
@@ -14,14 +15,28 @@ const Home = () => {
   };
 
   return (
-    <>
-      <h1>DEBUG</h1>
-      {screenList.map((value: number) => (
-        <button key={value} onClick={() => onChangeScreen(value)}>
-          {value}
-        </button>
-      ))}
-    </>
+    <div className="bg-white min-h-screen pt-16">
+      <Grid container spacing={2} justifyContent="center">
+        {screenList.map((value: number) => (
+          <Grid
+            item
+            key={value}
+            xs={12}
+            sm={2.4}
+            container
+            justifyContent="center"
+          >
+            <Button
+              variant="contained"
+              onClick={() => onChangeScreen(value)}
+              className="px-12 py-6 rounded-lg shadow-md hover:shadow-lg transition duration-300 w-40 h-20 text-2xl bg-custom1 hover:bg-custom2"
+            >
+              {value}
+            </Button>
+          </Grid>
+        ))}
+      </Grid>
+    </div>
   );
 };
 
