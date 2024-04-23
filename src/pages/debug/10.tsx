@@ -1,28 +1,25 @@
 import BackButton from "@/components/helper/BackButton";
-import { useEffect } from "react";
-import { Typography, Card, CardContent } from "@mui/material";
+import { useRouter } from "next/router";
+import { Typography, Button } from "@mui/material";
 
+/**
+ * フロントエンドエラー確認画面 (存在しないURLへ遷移)
+ */
 const Page10 = () => {
+  const router = useRouter();
+
   /**
-   * データを取得する関数
+   * データを登録する関数
    */
-  const onFetchData = async (): Promise<void> => {
-    try {
-      const response = await fetch("/api/debug/10/fetch");
-      const data = await response.json();
-      console.log(data);
-      console.log("10");
-    } catch (error) {
-      console.error("Error:", error);
-    }
+  const onPostData = async (): Promise<void> => {
+    console.log(
+      "詳細情報画面への遷移を実施、遷移先URL: /d#$%%et''')!%il(%%$#/page"
+    );
+    router.push("/d#$%%et''')!%il(%%$#/page");
   };
 
-  useEffect(() => {
-    onFetchData();
-  }, []);
-
   return (
-    <div className="bg-white min-h-screen">
+    <div className="bg-white min-h-screen pt-16">
       <Typography
         variant="h5"
         align="left"
@@ -30,17 +27,14 @@ const Page10 = () => {
       >
         Page 10
       </Typography>
-      <div className="flex justify-center">
-        <Card className="w-96 shadow-lg">
-          <CardContent>
-            <Typography variant="h5" component="div" gutterBottom>
-              Card Title
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              test
-            </Typography>
-          </CardContent>
-        </Card>
+      <div className="flex flex-col items-center">
+        <Button
+          variant="contained"
+          onClick={onPostData}
+          className="bg-custom1 text-white hover:bg-custom2 rounded-lg px-10 py-5 mt-10"
+        >
+          詳細情報画面へ遷移
+        </Button>
       </div>
       <div className="mt-8 flex justify-center">
         <BackButton />

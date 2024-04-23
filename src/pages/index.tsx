@@ -15,7 +15,7 @@ const Home = () => {
   };
 
   return (
-    <div className="bg-white min-h-screen pt-16">
+    <div className="bg-white min-h-screen pt-24">
       <Grid container spacing={2} justifyContent="center">
         {screenList.map((value: number) => (
           <Grid

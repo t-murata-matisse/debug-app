@@ -10,8 +10,10 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Header />
-      <Component {...pageProps} />
+      <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
+        <Header />
+        <Component {...pageProps} style={{ flex: 1 }} />
+      </div>
     </ThemeProvider>
   );
 }

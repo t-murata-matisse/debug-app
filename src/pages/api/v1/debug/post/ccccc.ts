@@ -1,11 +1,12 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
+/**
+ * 403 Forbiddenエラー返却API
+ */
 const handler = (req: NextApiRequest, res: NextApiResponse) => {
-  if (req.method === "GET") {
-    res.status(200).json([]);
-  } else {
-    res.status(500).json({ message: "Internal Server Error" });
-  }
+  res.status(403).json({
+    message: "403 Forbidden - アクセス権限がありません",
+  });
 };
 
 export default handler;

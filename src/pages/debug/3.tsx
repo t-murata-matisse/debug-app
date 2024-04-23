@@ -1,28 +1,48 @@
 import BackButton from "@/components/helper/BackButton";
-import { useEffect } from "react";
-import { Typography, Card, CardContent } from "@mui/material";
+import { useState } from "react";
+import {
+  Typography,
+  Card,
+  CardContent,
+  TextField,
+  Button,
+} from "@mui/material";
+import { useRouter } from "next/router";
 
+/**
+ * 400 Bad Requestエラー確認画面 （リクエストに不足があったパターン）
+ */
 const Page3 = () => {
+  const [username, setUserName] = useState("");
+  const [keyword, setKeyword] = useState("");
+  const router = useRouter();
+
   /**
-   * データを取得する関数
+   * データを登録する関数
    */
-  const onFetchData = async (): Promise<void> => {
+  const onPostData = async (): Promise<void> => {
+    console.log("入力したユーザー名（username）", username);
+    console.log("入力したキーワード（keyword）", keyword);
+
     try {
-      const response = await fetch("/api/debug/3/fetch");
-      const data = await response.json();
-      console.log(data);
-      console.log("3");
+      const response = await fetch("/api/v1/debug/post/bbbbb", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ keyword }),
+      });
+      if (!response.ok) {
+        throw new Error("エラーが発生しました");
+      }
     } catch (error) {
       console.error("Error:", error);
+      router.push("/error/system-error");
     }
   };
 
-  useEffect(() => {
-    onFetchData();
-  }, []);
-
   return (
-    <div className="bg-white min-h-screen">
+    <div className="bg-white min-h-screen pt-16">
       <Typography
         variant="h5"
         align="left"
@@ -34,11 +54,65 @@ const Page3 = () => {
         <Card className="w-96 shadow-lg">
           <CardContent>
             <Typography variant="h5" component="div" gutterBottom>
-              Card Title
+              ユーザー名
             </Typography>
-            <Typography variant="body2" color="text.secondary">
-              test
+            <TextField
+              label="ユーザー名を入力してください"
+              variant="outlined"
+              fullWidth
+              value={username}
+              onChange={(e) => setUserName(e.target.value)}
+              className="mb-4"
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  "&:hover fieldset": {
+                    borderColor: "#5e8e87",
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: "#5e8e87",
+                  },
+                },
+                "& .MuiInputLabel-root": {
+                  "&.Mui-focused": {
+                    color: "#5e8e87",
+                  },
+                },
+              }}
+            />
+            <Typography variant="h5" component="div" gutterBottom>
+              キーワード
             </Typography>
+            <TextField
+              label="キーワードを入力してください"
+              variant="outlined"
+              fullWidth
+              value={keyword}
+              onChange={(e) => setKeyword(e.target.value)}
+              className="mb-4"
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  "&:hover fieldset": {
+                    borderColor: "#5e8e87",
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: "#5e8e87",
+                  },
+                },
+                "& .MuiInputLabel-root": {
+                  "&.Mui-focused": {
+                    color: "#5e8e87",
+                  },
+                },
+              }}
+            />
+            <Button
+              variant="contained"
+              onClick={onPostData}
+              disabled={!keyword}
+              className="bg-custom1 text-white hover:bg-custom2"
+            >
+              送信
+            </Button>
           </CardContent>
         </Card>
       </div>

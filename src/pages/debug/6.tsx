@@ -1,28 +1,52 @@
 import BackButton from "@/components/helper/BackButton";
-import { useEffect } from "react";
-import { Typography, Card, CardContent } from "@mui/material";
+import { useState } from "react";
+import {
+  Typography,
+  Card,
+  CardContent,
+  TextField,
+  Button,
+  CircularProgress,
+} from "@mui/material";
+import { useRouter } from "next/router";
 
+/**
+ * 408 Request Timeoutエラー確認画面
+ */
 const Page6 = () => {
-  /**
-   * データを取得する関数
-   */
-  const onFetchData = async (): Promise<void> => {
+  const [keyword, setKeyword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+
+  /** * データを登録する関数 */
+  const onPostData = async (): Promise<void> => {
+    console.log("入力したキーワード（keyword）", keyword);
+    setLoading(true);
+
     try {
-      const response = await fetch("/api/debug/6/fetch");
-      const data = await response.json();
-      console.log(data);
-      console.log("6");
+      // 5秒間処理を止める
+      await new Promise((resolve) => setTimeout(resolve, 5000));
+
+      const response = await fetch("/api/v1/debug/post/eeeee", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ keyword }),
+      });
+      if (!response.ok) {
+        throw new Error("エラーが発生しました");
+      }
     } catch (error) {
       console.error("Error:", error);
+      router.push("/error/system-error");
+    } finally {
+      setLoading(false);
     }
   };
 
-  useEffect(() => {
-    onFetchData();
-  }, []);
-
   return (
-    <div className="bg-white min-h-screen">
+    <div className="bg-white min-h-screen pt-16">
       <Typography
         variant="h5"
         align="left"
@@ -34,11 +58,55 @@ const Page6 = () => {
         <Card className="w-96 shadow-lg">
           <CardContent>
             <Typography variant="h5" component="div" gutterBottom>
-              Card Title
+              キーワード
             </Typography>
-            <Typography variant="body2" color="text.secondary">
-              test
+            <TextField
+              label="キーワードを入力してください"
+              variant="outlined"
+              fullWidth
+              multiline
+              rows={4}
+              value={keyword}
+              onChange={(e) => setKeyword(e.target.value)}
+              className="mb-4"
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  "&:hover fieldset": {
+                    borderColor: "#5e8e87",
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: "#5e8e87",
+                  },
+                },
+                "& .MuiInputLabel-root": {
+                  "&.Mui-focused": {
+                    color: "#5e8e87",
+                  },
+                },
+              }}
+            />
+            <Typography
+              variant="body1"
+              fontWeight="bold"
+              fontSize="0.875rem"
+              className="mb-4"
+            >
+              ※20文字以上文字を入力してください
             </Typography>
+            <div className="flex justify-center">
+              <Button
+                variant="contained"
+                onClick={onPostData}
+                disabled={keyword.length < 20 || loading}
+                className="bg-custom1 text-white hover:bg-custom2"
+              >
+                {loading ? (
+                  <CircularProgress size={24} className="text-white" />
+                ) : (
+                  "送信"
+                )}
+              </Button>
+            </div>
           </CardContent>
         </Card>
       </div>
