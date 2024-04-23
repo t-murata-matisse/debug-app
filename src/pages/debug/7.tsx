@@ -4,13 +4,20 @@ import { Typography, Button } from "@mui/material";
 
 /**
  * 502 Bad Gatewayエラー確認画面
+ *
+ * データを取得しようとした際にインフラ側で問題が発生している
+ * - 手順　: 画像データ取得ボタン押下時
+ * - 対象API: /api/v1/debug/fetch/bbbbb
+ * - ステータス: 502 Bad Gateway
+ * - 原因①: AWSのEC2インスタンスが停止している
+ * - 対応: インフラ側の対応者へ問い合わせて状況を確認する
  */
 const Page7 = () => {
   const router = useRouter();
 
   /** * データを取得する関数 */
   const onFetchData = async (): Promise<void> => {
-    console.log("クライアントからサーバーへデータ取得を実施");
+    console.log("クライアントからサーバーへ画像データ取得を実施");
 
     try {
       const response = await fetch("/api/v1/debug/fetch/bbbbb", {
@@ -20,7 +27,7 @@ const Page7 = () => {
         },
       });
       if (!response.ok) {
-        throw new Error("エラーが発生しました");
+        throw new Error("エラーが発生しました、Networkタブを確認してください");
       }
     } catch (error) {
       console.error("Error:", error);
@@ -43,7 +50,7 @@ const Page7 = () => {
           onClick={onFetchData}
           className="bg-custom1 text-white hover:bg-custom2 rounded-lg px-10 py-5 mt-10"
         >
-          データ取得
+          画像データ取得
         </Button>
       </div>
       <div className="mt-8 flex justify-center">

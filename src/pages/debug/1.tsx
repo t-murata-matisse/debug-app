@@ -4,11 +4,20 @@ import { Typography, Button } from "@mui/material";
 
 /**
  * 500 Internal Server Errorエラー確認画面
+ *
+ * データを取得しようとした際にサーバー側で何らかのエラーが発生する
+ * - 手順　: データ取得ボタン押下時
+ * - 対象API: /api/v1/debug/fetch/aaaaa
+ * - ステータス: 500 Internal Server Error
+ * - 原因①: 対象のデータを返却するAPIで何らかの不具合が生じている
+ * - 対応: 対象のAPIの処理を修正する
  */
 const Page1 = () => {
   const router = useRouter();
 
-  /** * データを取得する関数 */
+  /**
+   * データを取得する関数
+   */
   const onFetchData = async (): Promise<void> => {
     console.log("クライアントからサーバーへデータ取得を実施");
 
@@ -20,7 +29,7 @@ const Page1 = () => {
         },
       });
       if (!response.ok) {
-        throw new Error("エラーが発生しました");
+        throw new Error("エラーが発生しました、Networkタブを確認してください");
       }
     } catch (error) {
       console.error("Error:", error);

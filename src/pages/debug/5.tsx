@@ -11,16 +11,25 @@ import { useRouter } from "next/router";
 
 /**
  * 404 Not Foundエラー確認画面
+ *
+ * データを登録しようとした際にリクエストに対応するリソースが存在しない
+ * - 手順　: 送信ボタン押下時
+ * - 対象API: /api/v1/debug/post/ddddd
+ * - ステータス: 404 Not Found
+ * - 原因①: クライアントからのデータ登録時のリクエストが間違っている
+ * - 原因②: サーバー側で想定しているリクエストが間違っている
+ * - 原因③: サーバー側の処理が間違っている
+ * - 対応: ①②ならいずれかに応じてリクエストの内容を確認して間違っている側を修正する、③なら対象のAPIの処理を修正する
  */
 const Page5 = () => {
-  const [keyword, setKeyword] = useState("");
+  const [searchKeyword, setSearchKeyword] = useState("");
   const router = useRouter();
 
   /**
    * データを登録する関数
    */
   const onPostData = async (): Promise<void> => {
-    console.log("入力したキーワード（keyword）", keyword);
+    console.log("入力した検索ワード（searchKeyword）", searchKeyword);
 
     try {
       const response = await fetch("/api/v1/debug/post/ddddd", {
@@ -28,10 +37,10 @@ const Page5 = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ keyword }),
+        body: JSON.stringify({ searchKeyword }),
       });
       if (!response.ok) {
-        throw new Error("エラーが発生しました");
+        throw new Error("エラーが発生しました、Networkタブを確認してください");
       }
     } catch (error) {
       console.error("Error:", error);
@@ -52,14 +61,14 @@ const Page5 = () => {
         <Card className="w-96 shadow-lg">
           <CardContent>
             <Typography variant="h5" component="div" gutterBottom>
-              キーワード
+              検索ワード
             </Typography>
             <TextField
-              label="キーワードを入力してください"
+              label="検索ワードを入力してください"
               variant="outlined"
               fullWidth
-              value={keyword}
-              onChange={(e) => setKeyword(e.target.value)}
+              value={searchKeyword}
+              onChange={(e) => setSearchKeyword(e.target.value)}
               className="mb-4"
               sx={{
                 "& .MuiOutlinedInput-root": {
@@ -80,7 +89,7 @@ const Page5 = () => {
             <Button
               variant="contained"
               onClick={onPostData}
-              disabled={!keyword}
+              disabled={!searchKeyword}
               className="bg-custom1 text-white hover:bg-custom2"
             >
               送信

@@ -11,6 +11,14 @@ import { useRouter } from "next/router";
 
 /**
  * 400 Bad Requestエラー確認画面 （リクエストに不正があったパターン）
+ *
+ * データを登録しようとした際に想定と異なるリクエストが送信される
+ * - 手順　: 送信ボタン押下時
+ * - 対象API: /api/v1/debug/post/aaaaa
+ * - ステータス: 400 Bad Request
+ * - 原因①: クライアントからのデータ登録時のリクエストが間違っている
+ * - 原因②: サーバー側で想定しているリクエストが間違っている
+ * - 対応: ①②のいずれかに応じてリクエストの内容を確認し、間違っている側を修正する
  */
 const Page2 = () => {
   const [keyword, setKeyword] = useState("");
@@ -31,7 +39,7 @@ const Page2 = () => {
         body: JSON.stringify({ keyword }),
       });
       if (!response.ok) {
-        throw new Error("エラーが発生しました");
+        throw new Error("エラーが発生しました、Networkタブを確認してください");
       }
     } catch (error) {
       console.error("Error:", error);

@@ -12,15 +12,23 @@ import { useRouter } from "next/router";
 
 /**
  * 408 Request Timeoutエラー確認画面
+ *
+ * データを登録する際にクライアント-サーバー間の通信でタイムアウトが発生
+ * - 手順　: 送信ボタン押下時
+ * - 対象API: /api/v1/debug/post/eeeee
+ * - ステータス: 408 Request Timeout
+ * - 原因①: クライアントからのデータ登録に時間がかかりすぎている
+ * - 原因②: サーバー側で設定しているタイムアウトまでの時間が処理にかかりそうな時間に対して短すぎる
+ * - 対応: ①ならクライアントの処理やネットワーク環境を確認して状態に応じた対応をする、②ならサーバー側のタイムアウト時間を調整する
  */
 const Page6 = () => {
-  const [keyword, setKeyword] = useState("");
+  const [text, setText] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   /** * データを登録する関数 */
   const onPostData = async (): Promise<void> => {
-    console.log("入力したキーワード（keyword）", keyword);
+    console.log("入力したテキスト（text）", text);
     setLoading(true);
 
     try {
@@ -32,10 +40,10 @@ const Page6 = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ keyword }),
+        body: JSON.stringify({ text }),
       });
       if (!response.ok) {
-        throw new Error("エラーが発生しました");
+        throw new Error("エラーが発生しました、Networkタブを確認してください");
       }
     } catch (error) {
       console.error("Error:", error);
@@ -58,16 +66,16 @@ const Page6 = () => {
         <Card className="w-96 shadow-lg">
           <CardContent>
             <Typography variant="h5" component="div" gutterBottom>
-              キーワード
+              テキスト
             </Typography>
             <TextField
-              label="キーワードを入力してください"
+              label="テキストを入力してください"
               variant="outlined"
               fullWidth
               multiline
               rows={4}
-              value={keyword}
-              onChange={(e) => setKeyword(e.target.value)}
+              value={text}
+              onChange={(e) => setText(e.target.value)}
               className="mb-4"
               sx={{
                 "& .MuiOutlinedInput-root": {
@@ -97,7 +105,7 @@ const Page6 = () => {
               <Button
                 variant="contained"
                 onClick={onPostData}
-                disabled={keyword.length < 20 || loading}
+                disabled={text.length < 20 || loading}
                 className="bg-custom1 text-white hover:bg-custom2"
               >
                 {loading ? (

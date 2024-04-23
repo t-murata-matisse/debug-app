@@ -4,13 +4,20 @@ import { Typography, Button } from "@mui/material";
 
 /**
  * 503 Service Unavailableエラー確認画面
+ *
+ * データを取得しようとした際にサーバーがメンテナンス状態
+ * - 手順　: エクセルファイル取得ボタン押下時
+ * - 対象API: /api/v1/debug/fetch/ccccc
+ * - ステータス: 503 Service Unavailable
+ * - 原因①: サーバーがメンテナンス中
+ * - 対応: 想定外のエラーであればサーバーの状態を確認する、想定通りのメンテナンスであれば対応は不要
  */
 const Page9 = () => {
   const router = useRouter();
 
   /** * データを取得する関数 */
   const onFetchData = async (): Promise<void> => {
-    console.log("クライアントからサーバーへデータ取得を実施");
+    console.log("クライアントからサーバーへExcelファイル取得を実施");
 
     try {
       const response = await fetch("/api/v1/debug/fetch/ccccc", {
@@ -20,7 +27,7 @@ const Page9 = () => {
         },
       });
       if (!response.ok) {
-        throw new Error("エラーが発生しました");
+        throw new Error("エラーが発生しました、Networkタブを確認してください");
       }
     } catch (error) {
       console.error("Error:", error);
@@ -43,7 +50,7 @@ const Page9 = () => {
           onClick={onFetchData}
           className="bg-custom1 text-white hover:bg-custom2 rounded-lg px-10 py-5 mt-10"
         >
-          データ取得
+          Excelファイル取得
         </Button>
       </div>
       <div className="mt-8 flex justify-center">

@@ -12,15 +12,22 @@ import { useRouter } from "next/router";
 
 /**
  * 504 Gateway Timeoutエラー確認画面
+ *
+ * データを登録する際にサーバー-ゲートウェイ（プロキシサーバーなど）間の通信でタイムアウトが発生
+ * - 手順　: 送信ボタン押下時
+ * - 対象API: /api/v1/debug/post/fffff
+ * - ステータス: 504 Gateway Timeout
+ * - 原因①: サーバーの処理で時間がかかりすぎている
+ * - 対応: サーバーの処理時間やタイムアウトまでの時間を見直して調整する
  */
 const Page8 = () => {
-  const [keyword, setKeyword] = useState("");
+  const [contact, setContact] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   /** * データを登録する関数 */
   const onPostData = async (): Promise<void> => {
-    console.log("入力したキーワード（keyword）", keyword);
+    console.log("入力した問い合わせ情報（contact）", contact);
     setLoading(true);
 
     try {
@@ -32,10 +39,10 @@ const Page8 = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ keyword }),
+        body: JSON.stringify({ contact }),
       });
       if (!response.ok) {
-        throw new Error("エラーが発生しました");
+        throw new Error("エラーが発生しました、Networkタブを確認してください");
       }
     } catch (error) {
       console.error("Error:", error);
@@ -58,16 +65,16 @@ const Page8 = () => {
         <Card className="w-96 shadow-lg">
           <CardContent>
             <Typography variant="h5" component="div" gutterBottom>
-              キーワード
+              問い合わせ
             </Typography>
             <TextField
-              label="キーワードを入力してください"
+              label="問い合わせを入力してください"
               variant="outlined"
               fullWidth
               multiline
               rows={4}
-              value={keyword}
-              onChange={(e) => setKeyword(e.target.value)}
+              value={contact}
+              onChange={(e) => setContact(e.target.value)}
               className="mb-4"
               sx={{
                 "& .MuiOutlinedInput-root": {
@@ -97,7 +104,7 @@ const Page8 = () => {
               <Button
                 variant="contained"
                 onClick={onPostData}
-                disabled={keyword.length < 20 || loading}
+                disabled={contact.length < 20 || loading}
                 className="bg-custom1 text-white hover:bg-custom2"
               >
                 {loading ? (
