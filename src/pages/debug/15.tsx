@@ -2,32 +2,42 @@ import BackButton from "@/components/helper/BackButton";
 import { Typography, Grid, Paper } from "@mui/material";
 
 /**
- * デザイン修正確認画面　（実践1）
+ * デザイン修正確認画面 （実践2）
  */
-const Page14 = () => {
-  const getBlockColor = (index: number) => {
-    if (index === 4 || index === 14) {
-      return "#000000";
+const Page15 = () => {
+  const getShapeStyle = (index: number) => {
+    switch (index) {
+      case 0:
+        return {
+          width: "150px",
+          height: "150px",
+          backgroundColor: "#2196f3",
+          borderRadius: "50%",
+        };
+      case 1:
+        return {
+          width: "120px",
+          height: "120px",
+          backgroundColor: "#e91e63",
+          transform: "rotate(45deg)",
+        };
+      case 2:
+        return {
+          width: "180px",
+          height: "90px",
+          backgroundColor: "#ffc107",
+          borderRadius: "90px 90px 0 0",
+          transform: "translateY(30px)",
+        };
+      case 3:
+        return {
+          width: "150px",
+          height: "150px",
+          backgroundColor: "#4caf50",
+        };
+      default:
+        return {};
     }
-    return index < 8 ? "#2196f3" : "#e91e63";
-  };
-
-  const getBlockStyle = (index: number) => {
-    if (index === 7) {
-      return {
-        backgroundColor: getBlockColor(index),
-        transform: "translate(16px, -16px)",
-      };
-    }
-    if (index === 9) {
-      return {
-        backgroundColor: getBlockColor(index),
-        transform: "translate(-8px, -8px)",
-      };
-    }
-    return {
-      backgroundColor: getBlockColor(index),
-    };
   };
 
   return (
@@ -37,7 +47,7 @@ const Page14 = () => {
         align="left"
         className="py-4 font-bold text-custom1 pl-14"
       >
-        Page 14
+        Page 15
       </Typography>
       <Typography
         variant="body1"
@@ -50,26 +60,28 @@ const Page14 = () => {
         <br />
         すべて修正できたらスクリーンショットを撮って保存しておいてください
         <br />
-        ・1〜8のブロックは同じ背景色になります
+        ・図形1は四角形にしてください
         <br />
-        ・9〜16のブロックは同じ背景色になります
+        ・図形2は回転を元に戻してください
         <br />
-        ・8と10のブロックの余計なcssを削除して適切な位置に配置してください{" "}
+        ・図形3は上下反転させてください
+        <br />
+        ・図形4は影を付けてください
         <br />
         <br />
         ※Elementsタブの変更内容はリロードなどを実施すると元に戻ります、あくまでも画面上での確認を行う際に使用する事が多いです
       </Typography>
-      <div className="px-14 mt-8">
-        <Grid container spacing={2}>
-          {Array.from({ length: 16 }, (_, index) => (
-            <Grid item xs={3} key={index}>
+      <div className="px-14 mt-16">
+        <Grid container spacing={4} justifyContent="space-between">
+          {Array.from({ length: 4 }, (_, index) => (
+            <Grid item key={index}>
               <Paper
                 elevation={3}
                 className="p-4 text-center"
-                style={getBlockStyle(index)}
+                style={getShapeStyle(index)}
               >
                 <Typography variant="h6" style={{ color: "white" }}>
-                  {index + 1}
+                  図形 {index + 1}
                 </Typography>
               </Paper>
             </Grid>
@@ -83,4 +95,4 @@ const Page14 = () => {
   );
 };
 
-export default Page14;
+export default Page15;

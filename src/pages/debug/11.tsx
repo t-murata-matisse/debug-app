@@ -59,6 +59,18 @@ const Page11 = () => {
       >
         Page 11
       </Typography>
+      <Typography
+        variant="body1"
+        fontWeight="bold"
+        fontSize="0.875rem"
+        className="mb-4 ml-14"
+        color={"black"}
+      >
+        開発者ツールのConsoleタブ、Networkタブを使用して発生するエラーの確認をしてください
+        <br />
+        ・発生手順、エラーの情報をメモしておいてください
+        <br />
+      </Typography>
       <Grid container spacing={2} justifyContent="center">
         {Array.from({ length: Math.ceil(users.length / 2) }, (_, i) => (
           <Grid item key={i} xs={12}>
@@ -75,11 +87,7 @@ const Page11 = () => {
                   >
                     <CardContent>
                       <div className="flex items-center mb-4">
-                        <Avatar
-                          alt={`User ${user} Avatar`}
-                          src={`/path/to/user/${user}/avatar.jpg`}
-                          className="mr-4"
-                        />
+                        <Avatar className="mr-4" />
                         <Typography variant="h6">ユーザー{user}</Typography>
                       </div>
                       <Button

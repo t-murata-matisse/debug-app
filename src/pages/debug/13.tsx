@@ -51,6 +51,18 @@ const Page13 = () => {
       >
         Page 13
       </Typography>
+      <Typography
+        variant="body1"
+        fontWeight="bold"
+        fontSize="0.875rem"
+        className="mb-4 ml-14"
+        color={"black"}
+      >
+        開発者ツールのConsoleタブ、Networkタブを使用して発生するエラーの確認をしてください
+        <br />
+        ・発生手順、エラーの情報をメモしておいてください
+        <br />
+      </Typography>
       <Grid container spacing={2} justifyContent="center">
         {Array.from({ length: Math.ceil(users.length / 4) }, (_, i) => (
           <Grid item key={i} xs={12}>
@@ -60,7 +72,7 @@ const Page13 = () => {
                   <Card
                     className="shadow-md cursor-pointer transition-all duration-200 ease-in-out hover:shadow-lg hover:transform hover:scale-105"
                     style={{
-                      height: "120px",
+                      height: "100px",
                       width: "80%",
                       maxWidth: "300px",
                       margin: "0 auto",
@@ -68,12 +80,8 @@ const Page13 = () => {
                     }}
                     onClick={() => onClickCard(user)}
                   >
-                    <CardContent className="flex flex-col items-center justify-center pt-6">
-                      <Avatar
-                        alt={`User ${user} Avatar`}
-                        src={`/path/to/user/${user}/avatar.jpg`}
-                        className="mb-2"
-                      />
+                    <CardContent className="flex flex-col items-center justify-center pt-4">
+                      <Avatar className="mb-2" />
                       <Typography variant="h6">ユーザー{user}</Typography>
                     </CardContent>
                   </Card>

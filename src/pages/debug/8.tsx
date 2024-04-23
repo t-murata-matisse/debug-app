@@ -61,6 +61,18 @@ const Page8 = () => {
       >
         Page 8
       </Typography>
+      <Typography
+        variant="body1"
+        fontWeight="bold"
+        fontSize="0.875rem"
+        className="mb-4 ml-14"
+        color={"black"}
+      >
+        開発者ツールのConsoleタブ、Networkタブを使用して発生するエラーの確認をしてください
+        <br />
+        ・発生手順、エラーの情報をメモしておいてください
+        <br />
+      </Typography>
       <div className="flex justify-center">
         <Card className="w-96 shadow-lg">
           <CardContent>
