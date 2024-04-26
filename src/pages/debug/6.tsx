@@ -118,7 +118,7 @@ const Page6 = () => {
                 variant="contained"
                 onClick={onPostData}
                 disabled={text.length < 20 || loading}
-                className="bg-custom1 text-white hover:bg-custom2"
+                className="bg-custom1 text-white hover:bg-custom2 px-16"
               >
                 {loading ? (
                   <CircularProgress size={24} className="text-white" />
