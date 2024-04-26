@@ -1,6 +1,6 @@
 import BackButton from "@/components/helper/BackButton";
 import { Typography, Card, CardContent, Box, Divider } from "@mui/material";
-import { answerData } from "@/pages/sample/team/answerData";
+import { answerData } from "../../../../answerData";
 
 const AnswerPage = () => {
   return (
