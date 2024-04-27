@@ -3,36 +3,26 @@ import { useRouter } from "next/router";
 import { Typography, Button } from "@mui/material";
 
 /**
- * 503 Service Unavailableエラー確認画面
+ * フロントエンドエラー確認画面 (存在しないURLへ遷移)
  *
- * データを取得しようとした際にサーバーがメンテナンス状態
- * - 手順　: エクセルファイル取得ボタン押下時
- * - 対象API: /api/v1/debug/fetch/ccccc
- * - ステータス: 503 Service Unavailable
- * - 原因①: サーバーがメンテナンス中
- * - 対応: 想定外のエラーであればサーバーの状態を確認する、想定通りのメンテナンスであれば対応は不要
+ * 画面遷移しようとした際に存在しないURLへ遷移する
+ * - 手順　: 詳細情報画面へ遷移ボタン押下時
+ * - 対象API: なし
+ * - ステータス: なし
+ * - 原因①: 画面遷移処理で設定しているURLが間違っている
+ * - 対応: 画面遷移処理で設定しているURLを確認して、正しいURLを設定する
  */
 const Page9 = () => {
   const router = useRouter();
 
-  /** * データを取得する関数 */
-  const onFetchData = async (): Promise<void> => {
-    console.log("クライアントからサーバーへExcelファイル取得を実施");
-
-    try {
-      const response = await fetch("/api/v1/debug/fetch/ccccc", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      if (!response.ok) {
-        throw new Error("エラーが発生しました、Networkタブを確認してください");
-      }
-    } catch (error) {
-      console.error("Error:", error);
-      router.push("/error/maintenance");
-    }
+  /**
+   * 画面遷移する関数
+   */
+  const onNavigatePage = async (): Promise<void> => {
+    console.log(
+      "詳細情報画面への遷移を実施、遷移先URL: /d#$%%et''')!%il(%%$#/page"
+    );
+    router.push("/d#$%%et''')!%il(%%$#/page");
   };
 
   return (
@@ -59,10 +49,10 @@ const Page9 = () => {
       <div className="flex flex-col items-center">
         <Button
           variant="contained"
-          onClick={onFetchData}
+          onClick={onNavigatePage}
           className="bg-custom1 text-white hover:bg-custom2 rounded-lg px-10 py-5 mt-10"
         >
-          Excelファイル取得
+          詳細情報画面へ遷移
         </Button>
       </div>
       <div className="mt-8 flex justify-center">

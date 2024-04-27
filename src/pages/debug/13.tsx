@@ -1,6 +1,6 @@
 import BackButton from "@/components/helper/BackButton";
 import { Typography, Avatar, Card, CardContent, Grid } from "@mui/material";
-import { useState, useEffect } from "react";
+
 /**
  * フロントエンドエラー確認画面 (Consoleタブで不明エラー、エラー画面に遷移しない)
  *

@@ -1,33 +1,38 @@
 import BackButton from "@/components/helper/BackButton";
-import { Typography, Grid, Paper } from "@mui/material";
+import { useRouter } from "next/router";
+import { Typography, Button } from "@mui/material";
 
 /**
- * デザイン修正確認画面　（実践1）
+ * 503 Service Unavailableエラー確認画面
+ *
+ * データを取得しようとした際にサーバーがメンテナンス状態
+ * - 手順　: エクセルファイル取得ボタン押下時
+ * - 対象API: /api/v1/debug/fetch/ccccc
+ * - ステータス: 503 Service Unavailable
+ * - 原因①: サーバーがメンテナンス中
+ * - 対応: 想定外のエラーであればサーバーの状態を確認する、想定通りのメンテナンスであれば対応は不要
  */
 const Page14 = () => {
-  const getBlockColor = (index: number) => {
-    if (index === 4 || index === 14) {
-      return "#000000";
-    }
-    return index < 8 ? "#2196f3" : "#e91e63";
-  };
+  const router = useRouter();
 
-  const getBlockStyle = (index: number) => {
-    if (index === 7) {
-      return {
-        backgroundColor: getBlockColor(index),
-        transform: "translate(16px, -16px)",
-      };
+  /** * データを取得する関数 */
+  const onFetchData = async (): Promise<void> => {
+    console.log("クライアントからサーバーへExcelファイル取得を実施");
+
+    try {
+      const response = await fetch("/api/v1/debug/fetch/ccccc", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (!response.ok) {
+        throw new Error("エラーが発生しました、Networkタブを確認してください");
+      }
+    } catch (error) {
+      console.error(error);
+      router.push("/error/maintenance");
     }
-    if (index === 9) {
-      return {
-        backgroundColor: getBlockColor(index),
-        transform: "translate(-8px, -8px)",
-      };
-    }
-    return {
-      backgroundColor: getBlockColor(index),
-    };
   };
 
   return (
@@ -46,35 +51,19 @@ const Page14 = () => {
         className="mb-4 ml-14"
         color={"black"}
       >
-        開発者ツールのElementsタブを使用してデザインの修正をしてください
+        開発者ツールのConsoleタブ、Networkタブを使用して発生するエラーの確認をしてください
         <br />
-        すべて修正できたらスクリーンショットを撮って保存しておいてください
+        ・発生手順、エラーの情報をメモしておいてください
         <br />
-        ・1〜8のブロックは同じ背景色になります
-        <br />
-        ・9〜16のブロックは同じ背景色になります
-        <br />
-        ・8と10のブロックの余計なcssを削除して適切な位置に配置してください{" "}
-        <br />
-        <br />
-        ※Elementsタブの変更内容はリロードなどを実施すると元に戻ります、あくまでも画面上での確認を行う際に使用する事が多いです
       </Typography>
-      <div className="px-14 mt-8">
-        <Grid container spacing={2}>
-          {Array.from({ length: 16 }, (_, index) => (
-            <Grid item xs={3} key={index}>
-              <Paper
-                elevation={3}
-                className="p-4 text-center"
-                style={getBlockStyle(index)}
-              >
-                <Typography variant="h6" style={{ color: "white" }}>
-                  {index + 1}
-                </Typography>
-              </Paper>
-            </Grid>
-          ))}
-        </Grid>
+      <div className="flex flex-col items-center">
+        <Button
+          variant="contained"
+          onClick={onFetchData}
+          className="bg-custom1 text-white hover:bg-custom2 rounded-lg px-10 py-5 mt-10"
+        >
+          Excelファイル取得
+        </Button>
       </div>
       <div className="mt-8 flex justify-center">
         <BackButton />

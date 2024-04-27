@@ -6,36 +6,49 @@ import {
   CardContent,
   TextField,
   Button,
+  CircularProgress,
 } from "@mui/material";
+import { useRouter } from "next/router";
 
 /**
- * フロントエンドエラー確認画面 (Consoleタブで引数不足エラー、エラー画面に遷移しない)
+ * 504 Gateway Timeoutエラー確認画面
  *
- * データを登録しようとした際に引数が不足している
+ * データを登録する際にサーバー-ゲートウェイ（プロキシサーバーなど）間の通信でタイムアウトが発生
  * - 手順　: 送信ボタン押下時
- * - 対象API: なし
- * - ステータス: なし
- * - 原因①: データの登録処理で引数の設定が間違っている
- * - 対応: 登録処理で正しい引数を設定する
+ * - 対象API: /api/v1/debug/post/fffff
+ * - ステータス: 504 Gateway Timeout
+ * - 原因①: サーバーの処理で時間がかかりすぎている
+ * - 対応: サーバーの処理時間やタイムアウトまでの時間を見直して調整する
  */
 const Page12 = () => {
-  const [userName, setUserName] = useState("");
-  const [userDescription, setUserDescription] = useState("");
-  const [keyword, setKeyword] = useState("");
+  const [contact, setContact] = useState("");
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
-  /**
-   * データを登録する関数
-   */
+  /** * データを登録する関数 */
   const onPostData = async (): Promise<void> => {
-    console.log("入力したユーザー名（userName）", userName);
-    console.log("入力したキーワード（keyword）", keyword);
+    console.log("入力した問い合わせ情報（contact）", contact);
+    setLoading(true);
 
     try {
-      throw new Error(
-        "引数からユーザー説明（userDescription）が不足している為、処理を中止しました"
-      );
+      // 5秒間処理を止める
+      await new Promise((resolve) => setTimeout(resolve, 5000));
+
+      const response = await fetch("/api/v1/debug/post/fffff", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ contact }),
+      });
+      if (!response.ok) {
+        throw new Error("エラーが発生しました、Networkタブを確認してください");
+      }
     } catch (error) {
-      console.error("Error:", error);
+      console.error(error);
+      router.push("/error/system-error");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -64,14 +77,16 @@ const Page12 = () => {
         <Card className="w-96 shadow-lg">
           <CardContent>
             <Typography variant="h5" component="div" gutterBottom>
-              ユーザー名
+              問い合わせ
             </Typography>
             <TextField
-              label="ユーザー名を入力してください"
+              label="問い合わせを入力してください"
               variant="outlined"
               fullWidth
-              value={userName}
-              onChange={(e) => setUserName(e.target.value)}
+              multiline
+              rows={4}
+              value={contact}
+              onChange={(e) => setContact(e.target.value)}
               className="mb-4"
               sx={{
                 "& .MuiOutlinedInput-root": {
@@ -89,66 +104,28 @@ const Page12 = () => {
                 },
               }}
             />
-            <Typography variant="h5" component="div" gutterBottom>
-              ユーザー説明
-            </Typography>
-            <TextField
-              label="ユーザー説明を入力してください"
-              variant="outlined"
-              fullWidth
-              value={userDescription}
-              onChange={(e) => setUserDescription(e.target.value)}
+            <Typography
+              variant="body1"
+              fontWeight="bold"
+              fontSize="0.875rem"
               className="mb-4"
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  "&:hover fieldset": {
-                    borderColor: "#5e8e87",
-                  },
-                  "&.Mui-focused fieldset": {
-                    borderColor: "#5e8e87",
-                  },
-                },
-                "& .MuiInputLabel-root": {
-                  "&.Mui-focused": {
-                    color: "#5e8e87",
-                  },
-                },
-              }}
-            />
-            <Typography variant="h5" component="div" gutterBottom>
-              キーワード
-            </Typography>
-            <TextField
-              label="キーワードを入力してください"
-              variant="outlined"
-              fullWidth
-              value={keyword}
-              onChange={(e) => setKeyword(e.target.value)}
-              className="mb-4"
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  "&:hover fieldset": {
-                    borderColor: "#5e8e87",
-                  },
-                  "&.Mui-focused fieldset": {
-                    borderColor: "#5e8e87",
-                  },
-                },
-                "& .MuiInputLabel-root": {
-                  "&.Mui-focused": {
-                    color: "#5e8e87",
-                  },
-                },
-              }}
-            />
-            <Button
-              variant="contained"
-              onClick={onPostData}
-              disabled={!userName || !userDescription || !keyword}
-              className="bg-custom1 text-white hover:bg-custom2"
             >
-              送信
-            </Button>
+              ※20文字以上文字を入力してください
+            </Typography>
+            <div className="flex justify-center">
+              <Button
+                variant="contained"
+                onClick={onPostData}
+                disabled={contact.length < 20 || loading}
+                className="bg-custom1 text-white hover:bg-custom2 px-16"
+              >
+                {loading ? (
+                  <CircularProgress size={24} className="text-white" />
+                ) : (
+                  "送信"
+                )}
+              </Button>
+            </div>
           </CardContent>
         </Card>
       </div>

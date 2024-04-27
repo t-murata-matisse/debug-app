@@ -43,7 +43,7 @@ const Page5 = () => {
         throw new Error("エラーが発生しました、Networkタブを確認してください");
       }
     } catch (error) {
-      console.error("Error:", error);
+      console.error(error);
       router.push("/error/system-error");
     }
   };

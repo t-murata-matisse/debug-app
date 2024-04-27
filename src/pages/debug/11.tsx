@@ -1,54 +1,43 @@
 import BackButton from "@/components/helper/BackButton";
-import { useRouter } from "next/router";
+import { useState } from "react";
 import {
   Typography,
-  Button,
-  Avatar,
   Card,
   CardContent,
-  Grid,
+  TextField,
+  Button,
 } from "@mui/material";
 
 /**
- * フロントエンドエラー確認画面 (Consoleタブで引数解析エラー、エラー画面に遷移しない)
+ * フロントエンドエラー確認画面 (Consoleタブで引数不足エラー、エラー画面に遷移しない)
  *
- * データを取得しようとした際に引数の解析に失敗する
- * - 手順　: 詳細情報を取得ボタン押下時
- * - 対象API: /api/v1/debug/fetch/${userId}`
- * - ステータス: 成功するものは200 OK
- * - 原因①: 特定のユーザーの詳細取得で引数の解析に失敗する
- * - 対応: 詳細情報取得処理を修正する
+ * データを登録しようとした際に引数が不足している
+ * - 手順　: 送信ボタン押下時
+ * - 対象API: なし
+ * - ステータス: なし
+ * - 原因①: データの登録処理で引数の設定が間違っている
+ * - 対応: 登録処理で正しい引数を設定する
  */
 const Page11 = () => {
+  const [userName, setUserName] = useState("");
+  const [userDescription, setUserDescription] = useState("");
+  const [keyword, setKeyword] = useState("");
+
   /**
-   * データを取得する関数
+   * データを登録する関数
    */
-  const onFetchData = async (userId: string): Promise<void> => {
-    if (userId === "E") {
-      console.error(`userIdが識別できない為、処理を中止しました`);
-      return;
-    }
+  const onPostData = async (): Promise<void> => {
+    console.log("入力したユーザー名（userName）", userName);
+    console.log("入力したキーワード（keyword）", keyword);
 
     try {
-      const response = await fetch(`/api/v1/debug/fetch/${userId}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
-      console.log(`ユーザー${userId}の詳細情報を取得しました:`, data);
+      throw new Error(
+        "引数からユーザー説明（userDescription）が不足している為、処理を中止しました"
+      );
     } catch (error) {
-      console.error("Error:", error);
+      console.error(error);
     }
   };
-
-  const users = ["A", "B", "C", "D", "E", "F"];
 
   return (
     <div className="bg-white min-h-screen pt-16">
@@ -71,40 +60,98 @@ const Page11 = () => {
         ・発生手順、エラーの情報をメモしておいてください
         <br />
       </Typography>
-      <Grid container spacing={2} justifyContent="center">
-        {Array.from({ length: Math.ceil(users.length / 2) }, (_, i) => (
-          <Grid item key={i} xs={12}>
-            <Grid container spacing={2} justifyContent="center">
-              {users.slice(i * 2, i * 2 + 2).map((user) => (
-                <Grid item key={user} xs={12} sm={5}>
-                  <Card
-                    className="shadow-md"
-                    style={{
-                      width: "100%",
-                      maxWidth: "400px",
-                      margin: "0 auto",
-                    }}
-                  >
-                    <CardContent>
-                      <div className="flex items-center mb-4">
-                        <Avatar className="mr-4" />
-                        <Typography variant="h6">ユーザー{user}</Typography>
-                      </div>
-                      <Button
-                        variant="contained"
-                        onClick={() => onFetchData(user)}
-                        className="bg-custom1 text-white hover:bg-custom2 rounded-lg px-4 py-2"
-                      >
-                        詳細情報を取得
-                      </Button>
-                    </CardContent>
-                  </Card>
-                </Grid>
-              ))}
-            </Grid>
-          </Grid>
-        ))}
-      </Grid>
+      <div className="flex justify-center">
+        <Card className="w-96 shadow-lg">
+          <CardContent>
+            <Typography variant="h5" component="div" gutterBottom>
+              ユーザー名
+            </Typography>
+            <TextField
+              label="ユーザー名を入力してください"
+              variant="outlined"
+              fullWidth
+              value={userName}
+              onChange={(e) => setUserName(e.target.value)}
+              className="mb-4"
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  "&:hover fieldset": {
+                    borderColor: "#5e8e87",
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: "#5e8e87",
+                  },
+                },
+                "& .MuiInputLabel-root": {
+                  "&.Mui-focused": {
+                    color: "#5e8e87",
+                  },
+                },
+              }}
+            />
+            <Typography variant="h5" component="div" gutterBottom>
+              ユーザー説明
+            </Typography>
+            <TextField
+              label="ユーザー説明を入力してください"
+              variant="outlined"
+              fullWidth
+              value={userDescription}
+              onChange={(e) => setUserDescription(e.target.value)}
+              className="mb-4"
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  "&:hover fieldset": {
+                    borderColor: "#5e8e87",
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: "#5e8e87",
+                  },
+                },
+                "& .MuiInputLabel-root": {
+                  "&.Mui-focused": {
+                    color: "#5e8e87",
+                  },
+                },
+              }}
+            />
+            <Typography variant="h5" component="div" gutterBottom>
+              キーワード
+            </Typography>
+            <TextField
+              label="キーワードを入力してください"
+              variant="outlined"
+              fullWidth
+              value={keyword}
+              onChange={(e) => setKeyword(e.target.value)}
+              className="mb-4"
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  "&:hover fieldset": {
+                    borderColor: "#5e8e87",
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: "#5e8e87",
+                  },
+                },
+                "& .MuiInputLabel-root": {
+                  "&.Mui-focused": {
+                    color: "#5e8e87",
+                  },
+                },
+              }}
+            />
+            <Button
+              variant="contained"
+              onClick={onPostData}
+              disabled={!userName || !userDescription || !keyword}
+              className="bg-custom1 text-white hover:bg-custom2"
+            >
+              送信
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
       <div className="mt-8 flex justify-center">
         <BackButton />
       </div>
