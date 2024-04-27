@@ -7,20 +7,10 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  BarChart,
-  Bar,
   AreaChart,
   Area,
 } from "recharts";
 import { useRouter } from "next/router";
-
-const BarGraph = ({ data }: any) => (
-  <ResponsiveContainer width="100%" height={400}>
-    <BarChart width={150} height={40} data={data}>
-      <Bar dataKey="uv" fill="#8884d8" />
-    </BarChart>
-  </ResponsiveContainer>
-);
 
 const AreaGraph = ({ data }: any) => (
   <ResponsiveContainer width="100%" height={400}>
@@ -40,60 +30,63 @@ const AreaGraph = ({ data }: any) => (
 );
 
 /**
- * 500 Internal Server Errorエラー確認画面
+ * フロントエンドエラー確認画面 (データ取得中にもう一度ボタンを押下)
  *
- * グラフデータ取得APIの待ち時間中にもう片方のグラフデータを取得しようとした際にエラーが発生する
- * - 手順　: グラフデータ取得のボタン押下時
- * - 対象API: /api/v1/debug/fetch/graph/${graphType}
- * - ステータス: 500 Internal Server Error
+ * グラフデータ取得APIの待ち時間中に再度グラフデータを取得しようとした際にエラーが発生する
+ * - 手順　: AREAグラフボタン押下時
+ * - 対象API: /api/v1/debug/fetch/fffff
+ * - ステータス: 成功するものは200 OK
  * - 原因①: グラフデータを取得している最中に取得のボタンをクリックできてしまう
- * - 原因②: グラフデータ取得APIの処理が重いため、片方のリクエスト中にもう片方のリクエストを送信するとエラーが発生する
- * - 対応: ①グラフデータを取得している最中は取得のボタンを非活性にしてクリックできないようにする、②グラフデータ取得APIの処理を修正する
+ * - 対応: グラフデータを取得している最中は取得のボタンを非活性にしてクリックできないようにする
  */
 const Page18 = () => {
   const router = useRouter();
   const [activeGraph, setActiveGraph] = useState("");
-  const [barData, setBarData] = useState(null);
   const [areaData, setAreaData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [callingApi, setCallingApi] = useState("");
 
   const onFetchData = async (graphType: string) => {
-    setBarData(null);
+    setAreaData(null);
+    if (callingApi !== "") {
+      if (isLoading) {
+        console.error("Error: areaData already exists.");
+        router.push("/error/system-error");
+        return;
+      } else {
+        setIsLoading(true);
+        setCallingApi(graphType);
+      }
+    }
+
     setAreaData(null);
     setActiveGraph(graphType);
     setIsLoading(true);
+    setCallingApi(graphType);
 
     try {
-      const response = await fetch(`/api/v1/debug/fetch/graph/${graphType}`, {
+      const response = await fetch("/api/v1/debug/fetch/fffff", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
         },
       });
 
-      if (!response.ok) {
-        throw new Error("エラーが発生しました、Networkタブを確認してください");
-      }
-
-      if (graphType === "bar") {
-        const data = await response.json();
-        setBarData(data);
-      } else {
-        const data = await response.json();
-        setAreaData(data);
-      }
+      const data = await response.json();
+      setAreaData(data);
     } catch (error) {
-      console.error(error);
-      router.push("/error/system-error");
+      console.error("Error: areaData fetch failed.");
     }
 
     setIsLoading(false);
+
+    setTimeout(() => {
+      setCallingApi("");
+    }, 1000);
   };
 
   const renderGraph = () => {
     switch (activeGraph) {
-      case "bar":
-        return <BarGraph data={barData} />;
       case "area":
         return <AreaGraph data={areaData} />;
       default:
@@ -123,13 +116,6 @@ const Page18 = () => {
         <br />
       </Typography>
       <Box className="mb-4 ml-14">
-        <Button
-          variant="contained"
-          onClick={() => onFetchData("bar")}
-          className="bg-custom1 hover:bg-custom2"
-        >
-          Barグラフ
-        </Button>
         <Button
           variant="contained"
           onClick={() => onFetchData("area")}

@@ -180,17 +180,14 @@ export const answerData = [
   },
   {
     page: 18,
-    procedure: "グラフデータ取得のボタン押下時",
-    endpoint: "/api/v1/debug/fetch/graph/${graphType}",
-    statusCode: "500 Internal Server Error",
+    procedure: "AREAグラフボタン押下時",
+    endpoint: "/api/v1/debug/fetch/fffff",
+    statusCode: "成功するものは200 OK",
     cause: [
-      "①グラフデータを取得している最中に取得のボタンをクリックできてしまう",
-      "②グラフデータ取得APIの処理が重いため、片方のリクエスト中にもう片方のリクエストを送信するとエラーが発生する",
+      "グラフデータを取得している最中に取得のボタンをクリックできてしまう",
     ],
     solution: [
-      "①グラフデータを取得している最中は取得のボタンを非活性にしてクリックできないようにする",
-      "②グラフデータ取得APIの処理を修正する",
-      "※ ①②は両方の修正が必要",
+      "グラフデータを取得している最中は取得のボタンを非活性にしてクリックできないようにする",
     ],
   },
 ];
